@@ -2,7 +2,7 @@ module D2S3
   class S3Config
     require 'yaml'
 
-    cattr_reader :access_key_id, :secret_access_key, :bucket
+    cattr_reader :access_key_id, :secret_access_key, :bucket, :region
 
     def self.load_config
       filename = "#{Rails.root}/config/amazon_s3.yml"
@@ -19,6 +19,7 @@ module D2S3
       @@access_key_id     = config[Rails.env]['access_key_id']
       @@secret_access_key = config[Rails.env]['secret_access_key']
       @@bucket            = config[Rails.env]['bucket_name']
+      @@region            = config[Rails.env]['region']
 
       unless @@access_key_id && @@secret_access_key && @@bucket
         raise "Please configure your S3 settings in #{filename}."

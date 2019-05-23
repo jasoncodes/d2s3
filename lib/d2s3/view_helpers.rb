@@ -6,6 +6,7 @@ module D2S3
 
     def s3_http_upload_tag(options = {})
       bucket          = D2S3::S3Config.bucket
+      region          = D2S3::S3Config.region
       access_key_id   = D2S3::S3Config.access_key_id
       key             = options[:key] || ''
       content_type    = options[:content_type] || '' # Defaults to binary/octet-stream if blank
@@ -33,7 +34,7 @@ module D2S3
         }").gsub(/\n|\r/, '')
 
       signature = b64_hmac_sha1(D2S3::S3Config.secret_access_key, policy)
-      content_tag :form, options[:form].merge(:action => "https://#{bucket}.s3.amazonaws.com/", :method => 'POST', :enctype => 'multipart/form-data') do
+      content_tag :form, options[:form].merge(:action => "https://#{bucket}.s3#{region && "-#{region}"}.amazonaws.com/", :method => 'POST', :enctype => 'multipart/form-data') do
         hidden_field_tag('key', "#{key}/${filename}") +
         hidden_field_tag('AWSAccessKeyId', access_key_id) +
         hidden_field_tag('acl', acl) +
